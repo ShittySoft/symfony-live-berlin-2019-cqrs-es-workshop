@@ -57,12 +57,4 @@ final class Building extends AggregateRoot
     {
         return (string) $this->uuid;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function id() : string
-    {
-        return $this->aggregateId();
-    }
 }
