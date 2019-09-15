@@ -196,7 +196,7 @@ return new ServiceManager([
             $buildings = $container->get(BuildingRepositoryInterface::class);
 
             return function (Command\RegisterNewBuilding $command) use ($buildings) {
-                $buildings->add(Building::new($command->name()));
+                $buildings->store(Building::new($command->name()));
             };
         },
         BuildingRepositoryInterface::class => function (ContainerInterface $container) : BuildingRepositoryInterface {
