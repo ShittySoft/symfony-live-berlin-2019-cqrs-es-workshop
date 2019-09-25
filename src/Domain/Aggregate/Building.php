@@ -24,7 +24,7 @@ final class Building extends AggregateRoot
     private $name;
 
     /** @var array<string, null> */
-    private $checkedInUsers;
+    private $checkedInUsers = [];
 
     public static function new(string $name) : self
     {
