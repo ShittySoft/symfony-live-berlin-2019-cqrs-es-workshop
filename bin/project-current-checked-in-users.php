@@ -4,6 +4,8 @@
 namespace Building\App;
 
 use Building\Domain\Aggregate\Building;
+use Building\Domain\DomainEvent\UserCheckedIn;
+use Building\Domain\DomainEvent\UserCheckedOut;
 use Interop\Container\ContainerInterface;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventStore\EventStore;
@@ -20,10 +22,21 @@ use Prooph\EventStore\Stream\StreamName;
         'aggregate_type' => Building::class,
     ]);
 
+    /** @var array<string, array<string, null>> $usersInBuildings */
     $usersInBuildings = [];
 
     foreach ($history as $event) {
-        // ... ???
+        if (! \array_key_exists($event->aggregateId(), $usersInBuildings)) {
+            $usersInBuildings[$event->aggregateId()] = [];
+        }
+
+        if ($event instanceof UserCheckedIn) {
+            $usersInBuildings[$event->aggregateId()][$event->username()] = null;
+        }
+
+        if ($event instanceof UserCheckedOut) {
+            unset($usersInBuildings[$event->aggregateId()][$event->username()]);
+        }
     }
 
     \array_walk($usersInBuildings, static function (array $users, string $buildingId) {
