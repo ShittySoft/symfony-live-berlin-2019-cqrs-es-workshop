@@ -1,0 +1,9 @@
+version: "3.4"
+services:
+  php:
+    image: php:sflive
+    dns:
+      - 10.240.0.100
+      - 10.240.0.200
+    volumes:
+      - ./:/var/www/app:rw,cached
