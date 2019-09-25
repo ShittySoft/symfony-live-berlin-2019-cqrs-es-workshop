@@ -210,6 +210,17 @@ return new ServiceManager([
                 $buildings->store($building);
             };
         },
+        Command\CheckOut::class => function (ContainerInterface $container) : callable {
+            $buildings = $container->get(BuildingRepositoryInterface::class);
+
+            return function (Command\CheckOut $command) use ($buildings) {
+                $building = $buildings->get($command->building());
+
+                $building->checkOutUser($command->username());
+
+                $buildings->store($building);
+            };
+        },
         BuildingRepositoryInterface::class => function (ContainerInterface $container) : BuildingRepositoryInterface {
             return new BuildingRepository(
                 new AggregateRepository(
