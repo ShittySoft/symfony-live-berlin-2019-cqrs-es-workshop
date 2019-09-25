@@ -17,7 +17,7 @@ use Prooph\EventStore\Stream\StreamName;
 
     /** @var AggregateChanged[] $history */
     $history = $eventStore->loadEventsByMetadataFrom(new StreamName('event_stream'), [
-        'aggregate_name' => Building::class,
+        'aggregate_type' => Building::class,
     ]);
 
     $usersInBuildings = [];
