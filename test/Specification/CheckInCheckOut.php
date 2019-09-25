@@ -8,6 +8,7 @@ use Assert\Assertion;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Building\Domain\Aggregate\Building;
+use Building\Domain\DomainEvent\CheckInAnomalyDetected;
 use Building\Domain\DomainEvent\NewBuildingWasRegistered;
 use Building\Domain\DomainEvent\UserCheckedIn;
 use Prooph\EventSourcing\AggregateChanged;
@@ -39,6 +40,12 @@ final class CheckInCheckOut implements Context
         );
     }
 
+    /** @Given /^"([^"]*)" checked into the building$/ */
+    public function checkedIntoTheBuilding(string $username)
+    {
+        $this->history[] = UserCheckedIn::toBuilding($this->id, $username);
+    }
+
     /** @When /^"([^"]*)" checks into the building$/ */
     public function checksIntoTheBuilding(string $username)
     {
@@ -53,6 +60,16 @@ final class CheckInCheckOut implements Context
         $event = $this->popNextRecordedEvent();
 
         Assertion::isInstanceOf($event, UserCheckedIn::class);
+        Assertion::same($event->username(), $username);
+    }
+
+    /** @Then /^a check\-in anomaly should have been detected for "([^"]*)" in this building$/ */
+    public function aCheckInAnomalyShouldHaveBeenDetectedForInThisBuilding(string $username)
+    {
+        /** @var CheckInAnomalyDetected $event */
+        $event = $this->popNextRecordedEvent();
+
+        Assertion::isInstanceOf($event, CheckInAnomalyDetected::class);
         Assertion::same($event->username(), $username);
     }
 
