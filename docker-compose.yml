@@ -1,7 +1,11 @@
 version: "3.4"
 services:
   php:
-    image: php:sflive
+    #image: php:sflive
+    build:
+      context: .
+    ports:
+      - "7811:8080"
     dns:
       - 10.240.0.100
       - 10.240.0.200

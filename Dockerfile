@@ -96,6 +96,6 @@ RUN chown -R $UID:$GID ${APP_PATH}; \
 #VOLUME ${APP_PATH}
 USER $UID:$GID
 
-EXPOSE 3000
-CMD ["bash"]
+EXPOSE 8080
+CMD ["/var/www/app/run.sh"]
 
